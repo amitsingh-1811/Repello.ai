@@ -1,2 +1,0 @@
-SERPAPI_KEY = "e29e88b086d5ec17e6d29ee81308f210b9588fd7db5d1a4d46fc0b6361927d65"
-SERPAPI_SEARCH_ENDPOINT = "https://serpapi.com/search"
