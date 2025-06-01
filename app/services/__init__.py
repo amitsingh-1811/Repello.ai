@@ -1,0 +1,1 @@
+# from app.scraper_project.scraper_project.spiders.custom_spider import CustomSpider
