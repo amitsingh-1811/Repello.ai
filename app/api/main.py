@@ -1,5 +1,8 @@
 import threading
+from queue import Queue
+
 import uvicorn
+from multiprocessing import Process,Queue
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from scrapy.crawler import CrawlerProcess
@@ -27,14 +30,16 @@ app.add_middleware(
 class QueryRequest(BaseModel):
     query: str
 
-results = []
-def run_crawler(manual_urls):
-    print("inside run_crawler")
-    global results
-    results.clear()
-    process = CrawlerProcess(get_project_settings())
-    process.crawl(MySpider, results=results, start_urls=manual_urls)
-    process.start()
+# results = []
+def run_crawler(manual_urls,q):
+    try:
+        results=[]
+        process = CrawlerProcess(get_project_settings())
+        process.crawl(MySpider, results=results, start_urls=manual_urls)
+        process.start()
+        q.put(results)  # Send results back to parent
+    except Exception as e:
+        q.put(e)
 
 @app.post("/ask")
 async def ask_question(request: QueryRequest):
@@ -51,14 +56,23 @@ async def ask_question(request: QueryRequest):
             print("item=> ",item)
             manual_urls.append(item['link'])
 
-        thread = threading.Thread(target=run_crawler, args=(manual_urls,))
-        thread.start()
-        thread.join()
+        q = Queue()
+        p = Process(target=run_crawler, args=(manual_urls,q))
+        p.start()
+        results = q.get()
+        p.join()
 
         print("enriched_data=> ",results)
+        # return {
+        #     "query": query,
+        #     "answer": results,
+        #     "top_results": [item['link'] for item in web_results[:3]]
+        # }
+
         if not results[0]:
             return {
                 "query": query,
+                "answer":results,
                 "top_results": [item['link'] for item in web_results[:3]]
             }
 

@@ -20,3 +20,4 @@ requirements.txt
 # Log files
 *.log
 
+app/config.py
