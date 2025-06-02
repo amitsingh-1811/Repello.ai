@@ -94,6 +94,12 @@ ROBOTSTXT_OBEY = False
 SPLASH_URL = 'http://localhost:8050'
 
 DOWNLOADER_MIDDLEWARES = {
+    #custom
+    'myproject.middlewares.RandomUserAgentMiddleware': 400,
+    'myproject.middlewares.HeadersMiddleware': 543,
+    'myproject.middlewares.MyprojectDownloaderMiddleware': 890,
+
+    #mandatory
     'scrapy_splash.SplashCookiesMiddleware': 723,
     'scrapy_splash.SplashMiddleware': 725,
     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
@@ -105,6 +111,13 @@ SPIDER_MIDDLEWARES = {
 
 DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+
+# Stealth config
+USER_AGENTS_LIST = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Firefox/89.0",
+    # Add more if needed
+]
 
 
 FEED_EXPORT_ENCODING = "utf-8"
