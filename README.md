@@ -35,6 +35,7 @@ The backend is structured with a clean separation of concerns:
 
 #### Scrapy Project (`myProject/`)
 - **spiders/example_spider.py**: Web scraping spider implementation
+- **middlewares.py**: Custom downloader middlewares
 - **settings.py**: Scrapy configuration and settings
 
 The backend processing follows three main milestones:
@@ -72,7 +73,7 @@ The backend processing follows three main milestones:
 - **Splash** - JavaScript rendering service
 - **Llama 3.2:1b** - Large language model
 - **LlamaIndex** - Document indexing and retrieval
-- **Threading** - Concurrent processing
+- **Multiprocessing** - Used to run Scrapy in isolated processes to avoid Twisted reactor conflicts
 
 
 
